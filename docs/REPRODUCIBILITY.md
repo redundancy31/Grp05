@@ -1,5 +1,7 @@
 # Reproducibility
 
+> **Native migration update:** the Makefile now has direct C build/test/verify/signal/readiness recipes and an isolated `build/native/` tree. These Make recipes were not run because GNU Make is absent on the current Windows host; direct GCC builds/tests were run. Historical Python result manifests and `results/laptop/`/`results/pi/` contents were preserved. Native benchmark manifests and C rival/race/perf workflows do not yet exist.
+
 This guide describes how to reproduce documented repository workflows from a clean clone. Use the course's actual CSVs and retain the exact files received. Do not overwrite existing evidence. Commands are run from the repository root; use `python` in PowerShell and `python3` in MSYS2/Linux as installed.
 
 ## Environment matrix

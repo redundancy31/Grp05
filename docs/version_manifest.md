@@ -1,8 +1,10 @@
 # Version manifest
 
-The active comparison matrix is built by `python scripts/project.py build --profile debug` and `python scripts/project.py build --profile release`. Each executable has an adjacent `.exe.json` sidecar containing its exact compiler command, compiler version, source hashes, and selected implementation. Variant builds use common flags `-std=c11 -Wall -Wextra -Wpedantic -Werror -DNDEBUG -Iinclude -Iprovided` plus the rung-specific flags below.
+The native build matrix is now declared by direct compiler recipes in `Makefile` and writes to `build/native/ladder/` and `build/native/replay/`. These builds do not write Python metadata sidecars. The historical Python driver remains available and may still build its old layout under `build/`; its result/evidence files are separate. Windows native builds were directly compiled with MSYS2 UCRT64 GCC 16.2.0 because GNU Make was unavailable. Variant builds use common flags `-std=c11 -Wall -Wextra -Wpedantic -Werror -DNDEBUG -Iinclude -Iprovided` plus the rung-specific flags below.
 
-| Version ID | Executable | Build configuration and actual selection |
+All rows below use the binary name matching the version ID in the native directories; the table's executable-path column documents the retained legacy Python-driver location.
+
+| Version ID | Historical Python-driver executable path | Build configuration and actual selection |
 | --- | --- | --- |
 | `v0_baseline_strtok_running_double_heap_O0` | `build/debug/market_baseline.exe` | `-std=c11 -Wall -Wextra -Wpedantic -g3 -O0 -Iinclude`; baseline `fgets/strtok/strtod`, running double SMA sums, double prices, whole-file dynamically allocated trade array. |
 | `v1_baseline_strtok_running_double_heap_O2` | `build/release/market_baseline.exe` | `-std=c11 -Wall -Wextra -Wpedantic -O2 -DNDEBUG -Iinclude`; same baseline implementation at the actual release optimization level. |
@@ -16,7 +18,9 @@ The active comparison matrix is built by `python scripts/project.py build --prof
 | `v9_manual_running_double_exact_malloc_trade_array_O2` | `build/variants/v9_manual_running_double_exact_malloc_trade_array_O2.exe` | Same parser/algorithm/representation/O2 as v5; `-DSTORAGE_KIND=2 -DFIXED_TRADE_CAPACITY=12000000U`; first pass counts valid rows, second allocates exactly `count * sizeof(Trade)` and loads. |
 | `v10_manual_running_double_soa_O2` | `build/variants/v10_manual_running_double_soa_O2.exe` | Separate `src/market_soa.c`; same manual digit-walk parser, running double SMA, double price representation, O2 flags, and exact two-pass count/load boundary as v9. `-DSTORAGE_KIND=3` allocates four distinct exact-sized arrays: `int64_t timestamp_us[]`, `double price[]`, `double qty[]`, and `int is_buy[]`; no `Trade` array backs this version. |
 
-All eleven offline versions are registered for the official test20 and development/stress correctness gates. v10's replay target is explicitly compatible with its manual-reader/running-double strategy, but the independent timestamp replay executable uses its streaming storage path; it does not claim offline SoA storage. The v9 versus v10 controlled pair uses matching parser, SMA, price representation, compiler optimization, dataset, and count/load/compute timing boundary. Cache-line locality is a hypothesis, and measured slower results remain in the report. Naive versions retain running-double comparator shadows for equality/crossover consistency; v6 likewise retains a double comparator shadow.
+All eleven offline versions are built by the native Makefile. Native `make verify` checks the supplied official test20 summary plus known trace rows and OHLC bars across the full ladder. v10's replay target is explicitly compatible with its manual-reader/running-double strategy, but the independent timestamp replay executable uses its streaming storage path; it does not claim offline SoA storage. The v9 versus v10 controlled pair uses matching parser, SMA, price representation, compiler optimization, dataset, and count/load/compute timing boundary. Cache-line locality is a hypothesis, and measured slower results remain in the report. Naive versions retain running-double comparator shadows for equality/crossover consistency; v6 likewise retains a double comparator shadow.
+
+Replay target compiler selections mirror the historical `replay_specs()` settings: v0 is `-O0 -g3`; v1 is `-O2 -DNDEBUG`; v7 is `-O3 -DNDEBUG`; remaining replay targets use their variant optimization level and reader/SMA/representation/storage macros. Replay v0/v1 use reader kind 3 and the exact SoA preload backend, while offline v0/v1 are the baseline `market_baseline.c` executable. These are distinct paths and should not be conflated.
 
 ## Isolated assembly kernel (not a v11 market-engine version)
 

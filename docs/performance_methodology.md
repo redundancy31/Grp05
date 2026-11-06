@@ -1,5 +1,7 @@
 ﻿# Performance methodology
 
+> **Migration status:** The measurement procedures below are the retained Python implementation, not yet native C workflows. No new stress benchmark was run and no benchmark output was written by this migration. A native C collector/median/speedup/memory/evidence workflow remains unimplemented; legacy measurements retain their original source and flag identity.
+
 ## Controlled offline benchmark
 
 The benchmark times the normal non-interactive C computation with `--bench-phases`. It does not enable per-trade traces, LED output, plotting, decision logging, or file export. Process wall time includes launch and the full executable path; the executable separately reports counting, loading, and compute phases where applicable. Compare like timing boundaries and retain the phase columns when storage variants have different load work.

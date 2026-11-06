@@ -1,5 +1,7 @@
 # Developer Guide
 
+> **Migration status:** Native C build, quick tests, test20 verification, signal generation, and source/data readiness are defined by the Makefile and write new generated output under `build/native/`. GNU Make was unavailable on the current Windows machine, so equivalent GCC commands were run directly. Benchmarking, rival/sweep, race orchestration, perf normalization, and assembly generation/annotation remain Python-owned. See `docs/c_migration_plan.md` before relying on historical commands below.
+
 ## Repository map
 
 | Path | Responsibility |

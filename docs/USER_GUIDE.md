@@ -1,5 +1,7 @@
 # User Guide
 
+> **Current status:** The Python command reference below describes the retained legacy driver. Implemented Python-independent targets are `make`, `make test`, `make verify`, `make replay-test`, `make asm-test`, `make signals`, and `make readiness`. Native outputs go under `build/native/`. GNU Make was unavailable locally; direct GCC equivalents were exercised. Workflows without a native target remain Python-dependent and are listed in `docs/known_limitations.md`.
+
 Run the driver from the repository root. In PowerShell use `python`; in MSYS2 UCRT64/Linux use `python3`. The examples below use `python3`. `scripts/project.py --help` and each subcommand's `--help` are authoritative when the parser changes. Dataset searches recognize `test20`, `dev_1M`, and `stress_full`; defaults are windows 3/5 for test20 and 30/60 for dev/stress.
 
 ## Common command effects

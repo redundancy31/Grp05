@@ -1,5 +1,11 @@
 # Getting Started
 
+## Native quick start (current migration implementation)
+
+For the implemented C build/test/verify/signals/readiness targets, use **MSYS2 UCRT64** on Windows or a Linux shell with GCC and GNU Make. Run `make`, `make test`, `make verify`, `make replay-test`, `make asm-test`, `make signals`, and `make readiness` from the repository root. Native binaries/output go to `build/native/`. The current Windows checkout has GCC and GNUplot but no GNU Make, so Make commands have not been run here; see `docs/c_migration_plan.md` for direct GCC validation results.
+
+The setup and command examples below still describe the historical Python analysis driver. Python remains required for benchmark, rival/sweep, race, perf normalization, assembly annotation, and other not-yet-ported workflows. NumPy is optional and was not installed for this migration. Pi hardware/LED/perf/AArch64 validation requires the actual Pi.
+
 Run commands from the repository root unless a section names another directory. The project driver discovers CSVs whose names contain `test20`, `dev_1M`, or `stress_full` in the root, `data/`, or `datasets/`. The checked-in official test input currently has the supplied filename `test20 - Copy (6).csv`; its oracle is `test20_expected - Copy (6).txt`. Obtain development/stress files from the course/team using their actual names. Do not rename data merely to make a guessed filename work.
 
 The project uses test20 windows 3/5 and Group 05 dev/stress windows 30/60. These are defaults in the driver; replay and benchmark commands allow window overrides where applicable.

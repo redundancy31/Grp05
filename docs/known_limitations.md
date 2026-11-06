@@ -1,5 +1,13 @@
 # Known limitations and evidence gaps
 
+- The C-first migration is partial. Native `make` build/test/verify/signals/readiness recipes and local C tests exist, but GNU Make was unavailable here and the recipes were only validated through direct GCC equivalents plus static review.
+- Required project workflows still owned by Python include benchmark collection/statistics and evidence, rival P&L/reaction sweep, race orchestration/state, perf normalization, assembly generation/annotation, and historical full readiness/report operations. The compulsory project as a whole is therefore not yet Python-independent. No fake C wrappers were added for these features.
+- The native C test suite currently covers parser contracts, an independent synthetic indicator/crossover/bar case, replay support tests, portable kernel correctness, and official test20 summary plus trace checks. Fixed-point overflow, all allocation failure branches, full stress, and prior Python workflow coverage have not all been ported.
+- The native signal generator was run on the supplied development file and produced fresh `.dat`, GNUplot script, and nonempty PNG under `build/native/`. Existing `plots/` evidence remains unchanged.
+- No native benchmark target is implemented; do not use `build/native` smoke output as performance evidence. Existing `results/laptop/` data remains legacy evidence for its original source/flags.
+- Stage 0 was corrected and directly validated at all four optimization levels for compilation and O2 for runtime. The local O2 assembly optimized away the named recursive function; no recursive-machine-code or speed-difference claim is made. There is no controlled Stage 0 timing set or physical LED evidence.
+- The current workstation has GCC 16.2.0 but no Make executable in PATH or the checked MSYS2 UCRT64/MSYS/Git locations. GNU Make recipes were not executed. Use MSYS2 UCRT64 or Linux with Make for recipe-level validation.
+- The final coursework PDF is present, but no installed local text extractor was found. Existing page citations still need verification against that final PDF; no quotations or new page references were invented.
 - The authoritative coursework PDF is present at `provided/CSC1103-1104_Mini_Project_2026-27_Tick-to-Trade_final.pdf`. The requirements matrix and report map use it as the assignment source.
 - Local laptop stress benchmark evidence exists under `results/laptop/`. It supports laptop-specific observations only; it is not evidence of Pi performance.
 - The local `results/pi/` tree contains only `README.md`. Pi benchmark, perf, replay, LED, race, compiler assembly, and native AArch64 kernel results are therefore **PI EVIDENCE REQUIRED / NOT LOCALLY VERIFIED** in this audit.
