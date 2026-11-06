@@ -1,0 +1,3 @@
+trade,scheduled_release_ns,processing_start_ns,decision_ns,processing_duration_ns,release_to_decision_latency_ns
+1,0,0,1000,1000,1000
+2,0,0,1500,500,1500

@@ -1,0 +1,4 @@
+#include "native_stats.h"
+#include <stdint.h>
+#include <stdio.h>
+int main(void){NativeStats s;long double median;uint64_t a[]={9,1,5};if(!native_stats_compute(a,3,&s)||s.count!=3||s.min!=1||s.max!=9||s.mean<4.999L||s.mean>5.001L)return 1;native_stats_sort(a,3);uint64_t p;if(!native_stats_median_sorted(a,3,&median)||median!=5||!native_stats_percentile_sorted(a,3,.5L,&p)||p!=5||!native_stats_percentile_sorted(a,3,.99L,&p)||p!=9)return 2;uint64_t b[]={8,2,4,6};native_stats_sort(b,4);if(!native_stats_median_sorted(b,4,&median)||median!=5||!native_stats_percentile_sorted(b,4,.5L,&p)||p!=4||!native_stats_percentile_sorted(b,4,.99L,&p)||p!=8)return 3;if(native_stats_compute(b,0,&s)||native_stats_median_sorted(b,0,&median)||native_stats_percentile_sorted(b,0,.5L,&p)||native_stats_percentile_sorted(b,4,1.1L,&p))return 4;puts("native stats tests PASS");return 0;}

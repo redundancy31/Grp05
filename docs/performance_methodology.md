@@ -1,6 +1,16 @@
 ﻿# Performance methodology
 
-> **Migration status:** The measurement procedures below are the retained Python implementation, not yet native C workflows. No new stress benchmark was run and no benchmark output was written by this migration. A native C collector/median/speedup/memory/evidence workflow remains unimplemented; legacy measurements retain their original source and flag identity.
+> **Migration status:** Native C benchmark collection and perf CSV normalization are implemented. Legacy evidence retains its original source and flags; this migration's smoke measurements are not Pi or large-dataset performance evidence. Native race timing remains unimplemented, and actual `perf` collection requires Linux.
+
+## Native benchmark runner
+
+Use `make benchmark DATASET=test20 VERSION_ID=all REPEATS=5`; `DATASET` may also be `dev`, `stress`, or an explicit path. Set `SHORT_WINDOW` and `LONG_WINDOW` together for explicit overrides. The runner selects from the native v0-v10 registry and always includes v0 as the correctness/speedup reference, even when one non-v0 version is requested. It checks common summary results (trade count, BUY/SELL counts, OHLC count, and VWAP within 1e-5) before timing, then takes at least five process launches per selected version. A changed or failed result invalidates the run. Outputs are placed in a new monotonic-time-named directory under `$(BUILD_DIR)/benchmark-results/` and include raw rows, summary statistics, and a plain-text manifest. Process wall includes executable launch, CSV load, compute, and compact output; engine phases are recorded separately. The FNV-1a output checksum is diagnostic and is not used as the correctness oracle. Missing phase data is recorded as `NA`. Peak process memory, logical reserved/used memory, throughput, and speedup against v0 are distinguished in the CSV. Median and p50/p99 use nearest-rank percentiles.
+
+## Native perf collection and normalization
+
+On Linux, `make profile PROFILE_VERSION=v1_baseline_strtok_running_double_heap_O2 DATASET='test20 - Copy (6).csv' SHORT_WINDOW=3 LONG_WINDOW=5 PROFILE_DIR='build/native/profile-unique-name'` collects cycles, instructions, and cache misses with `perf stat -x,` into a new directory. Raw capture is preserved, and the C parser writes normalized rows, IPC when cycle/instruction scopes match, and diagnostic notes. Empty/malformed fields, unsupported values, permission diagnostics, and multiplexing percentages remain visible; unavailable counters are `NA`. The profile manifest records the executable, selected build flags, target/parser statuses, dataset, windows, and that affinity/governor were not collected. The runner does not alter CPU controls.
+
+To normalize an existing raw file without collecting counters, use `make perf-summary PERF_RAW=... PERF_SUMMARY=...`. The parser accepts cycles, instructions, and cache misses, including `:u`/`:k` suffixes, and does not combine different scopes. Locale thousands separators are diagnosed as malformed rather than silently interpreted. Windows has no native `perf` collector; do not treat elapsed time as a hardware counter.
 
 ## Controlled offline benchmark
 
@@ -22,7 +32,7 @@ A controlled Pi run should use the same dataset bytes, native build, compiler fl
 
 For Group 05, the short/long windows are 3/5 on test20 and 30/60 on dev/stress. The intended final Pi target is Pi 5/AArch64 with GCC 14.2.0, performance governor, and taskset CPU 3 where supported. Treat these as collection conditions to verify, not as established facts, until the run manifest records the hardware, compiler, governor state, and applied affinity. The current local `results/pi/` tree contains no run artifacts beyond README.md.
 
-Host OS, architecture/model where exposed, compiler path/version, build metadata and exact flags, dataset path/size/SHA256/trade count, versions, timestamps, raw times, medians, throughput, memory metrics, and status are saved with each run. Logical allocation is the algorithm's reported reservation/payload; process peak memory is an OS measurement when available and is identified by metric.
+Host OS, architecture/model where exposed, compiler path/version, build metadata and exact flags, dataset path/size/SHA256/trade count, versions, timestamps, raw times, medians, throughput, memory metrics, and status are saved with each run. The conventional median averages the two middle samples for even repeat counts; separately reported p50/p99 use nearest-rank percentiles. Logical allocation is the algorithm's reported reservation/payload; process peak memory is an OS measurement when available and is identified by metric.
 
 ## perf stat evidence
 

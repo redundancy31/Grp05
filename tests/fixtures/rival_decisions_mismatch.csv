@@ -1,0 +1,3 @@
+trade,timestamp_us,primary_short_sma,primary_long_sma,primary_decision,shadow_short_sma,shadow_long_sma,shadow_decision,effective_decision,policy
+1,0,0,0,0,0,0,0,0,primary
+2,0,0,0,-1,0,0,0,-1,primary

@@ -1,0 +1,6 @@
+100000,,cycles:u,1000000,99.50
+250000,,instructions:u,1000000,99.50
+<not supported>,,cache-misses:u,1000000,0.00
+1,234,,cycles:k,1000,25.00
+permission denied,,,,
+broken
